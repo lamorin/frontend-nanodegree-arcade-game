@@ -80,7 +80,23 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
+    }
+
+    function checkCollisions(){
+        allEnemies.forEach(function(enemy) {
+
+            var tolerance = 20;
+            var collisionZoneX0 = enemy.x - tolerance ;
+            var collisionZoneX1 = enemy.x + tolerance ;
+            var collisionZoneY0 = enemy.y - tolerance ;
+            var collisionZoneY1 = enemy.y + tolerance ;
+
+            if (collisionZoneX0 <= player.x && collisionZoneX1 > player.x && collisionZoneY0 < player.y && collisionZoneY1 > player.y) {
+                console.log('collision');
+                player.restart();
+            }
+        });
     }
 
     /* This is called by the update function and loops through all of the

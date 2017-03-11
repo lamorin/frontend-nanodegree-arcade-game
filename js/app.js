@@ -1,3 +1,32 @@
+
+var configuration = {
+    "limits" : {
+                "upperLimit" : -80,
+                "rightLimit" : 400,
+                "downLimit" : 450,
+                "leftLimit" : 0
+    },
+    "stepX" : 100,
+    "stepY" : 83
+};
+
+var Entity = function(x,y) {
+    this.x = x;
+    this.y = y;
+    this.sprite = 'images/enemy-bug.png';
+};
+
+Entity.prototype.moveToXY = function(x,y) {
+    this.x = x;
+    this.y = y;
+};
+
+Entity.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+Entity.prototype.update = function() {};
+
 // Enemies our player must avoid
 var Enemy = function(x, y, speed) {
     // Variables applied to each of our instances go here,
@@ -5,11 +34,13 @@ var Enemy = function(x, y, speed) {
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-    this.x = x;
-    this.y = y;
-    this.speed = speed;
     this.sprite = 'images/enemy-bug.png';
+    this.speed = speed;
+    Entity.call(this, x, y);
+    //this.sprite = 'images/enemy-bug.png';
 };
+Enemy.prototype = Object.create(Entity.prototype);
+Enemy.prototype.constructor = Entity;
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -26,49 +57,66 @@ Enemy.prototype.update = function(dt) {
 };
 
 // Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
+//Enemy.prototype.render = function() {
+//    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+//};
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function(x, y) {
-    this.x = x;
-    this.y = y;
-
+    Entity.call(this,x,y);
     this.sprite = 'images/char-boy.png';
 };
 
-Player.prototype.update = function() {
+Player.prototype = Object.create(Entity.prototype);
 
-};
-
-Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
+Player.prototype.constructor = Entity;
 
 Player.prototype.handleInput = function(m){
-    var stepX = 100;
-    var stepY = 83;
-
     switch (m) {
       case 'left':
-        this.x -= stepX;
+        this.moveLeft();
         break;
       case 'up':
-        this.y -= stepY;
+        this.moveUp();
         break;
       case 'right':
-        this.x += stepX;
+        this.moveRight();
         break;
       default:
-        this.y += stepY;
+        this.moveDown();
         break;
     }
 
     console.log(this.x + ',' + this.y);
 };
+
+Player.prototype.moveLeft = function() {
+    if (this.x - configuration.stepX > configuration.limits.leftLimit) {
+        this.x -= configuration.stepX;
+    }
+};
+
+Player.prototype.moveRight = function() {
+    if (this.x + configuration.stepX < configuration.limits.rightLimit) {
+        this.x += configuration.stepX;
+    }
+};
+
+Player.prototype.moveUp = function() {
+    if (this.y - configuration.stepY > configuration.limits.upperLimit) {
+        this.y -= configuration.stepY;
+    }
+};
+
+Player.prototype.moveDown = function() {
+    if (this.y + configuration.stepY < configuration.limits.downLimit) {
+        this.y += configuration.stepY;
+    }
+};
+
+Player.prototype.update = function() {};
 
 Player.prototype.restart = function() {
     this.x = 0;

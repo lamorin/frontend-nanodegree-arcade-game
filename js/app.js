@@ -7,7 +7,14 @@ var configuration = {
                 "leftLimit" : -50
     },
     "stepX" : 100,
-    "stepY" : 83
+    "stepY" : 83,
+    "rowRockOne" : 229,
+    "rowRockTwo" : 146,
+    "rowRockThree" : 63,
+    "minimumSpeed" : 10,
+    "maximumSpeed" : 500,
+    "playerInitX" : 200,
+    "playerInitY" : 405
 };
 
 var Entity = function(x,y) {
@@ -90,8 +97,6 @@ Player.prototype.handleInput = function(m){
         this.moveDown();
         break;
     }
-
-    console.log(this.x + ',' + this.y);
 };
 
 Player.prototype.moveLeft = function() {
@@ -125,17 +130,31 @@ Player.prototype.restart = function() {
     this.y = 405;
 };
 
+var randomSpeed = function() {
+    var speed = Math.random() * configuration.maximumSpeed;
+    if (speed < configuration.minimumSpeed) {
+        speed = configuration.minimumSpeed;
+    }
+    return speed;
+};
+
+var createEnemies = function() {
+    var enemies = [];
+    enemies.push(new Enemy(0,configuration.rowRockThree, randomSpeed()));
+    enemies.push(new Enemy(0,configuration.rowRockThree, randomSpeed()));
+    enemies.push(new Enemy(0,configuration.rowRockTwo, randomSpeed()));
+    enemies.push(new Enemy(0,configuration.rowRockOne, randomSpeed()));
+
+    return enemies;
+
+};
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var allEnemies = [];
+var allEnemies = createEnemies();
 
-allEnemies.push(new Enemy(0,63, 100));
-allEnemies.push(new Enemy(0,63, 500));
-allEnemies.push(new Enemy(0,146, 200));
-allEnemies.push(new Enemy(0,229, 300));
-
-var player = new Player(0,405);
+var player = new Player(configuration.playerInitX,configuration.playerInitY);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

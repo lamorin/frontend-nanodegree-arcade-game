@@ -2,9 +2,9 @@
 var configuration = {
     "limits" : {
                 "upperLimit" : -80,
-                "rightLimit" : 400,
+                "rightLimit" : 500,
                 "downLimit" : 450,
-                "leftLimit" : 0
+                "leftLimit" : -50
     },
     "stepX" : 100,
     "stepY" : 83

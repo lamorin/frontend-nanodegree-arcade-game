@@ -13,7 +13,7 @@ var configuration = {
 var Entity = function(x,y) {
     this.x = x;
     this.y = y;
-    this.sprite = 'images/enemy-bug.png';
+    this.sprite = '';
 };
 
 Entity.prototype.moveToXY = function(x,y) {
@@ -34,12 +34,14 @@ var Enemy = function(x, y, speed) {
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
+    Entity.call(this, x, y);
     this.sprite = 'images/enemy-bug.png';
     this.speed = speed;
-    Entity.call(this, x, y);
     //this.sprite = 'images/enemy-bug.png';
 };
+
 Enemy.prototype = Object.create(Entity.prototype);
+
 Enemy.prototype.constructor = Entity;
 
 // Update the enemy's position, required method for game
@@ -127,13 +129,13 @@ Player.prototype.restart = function() {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var allEnemies = [];
+
 allEnemies.push(new Enemy(0,63, 100));
 allEnemies.push(new Enemy(0,63, 500));
 allEnemies.push(new Enemy(0,146, 200));
 allEnemies.push(new Enemy(0,229, 300));
 
 var player = new Player(0,405);
-
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -147,8 +149,3 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
-
-
-
-
-
